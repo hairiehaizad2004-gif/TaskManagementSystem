@@ -3,7 +3,7 @@
     Created on : 6 Jan 2026, 10:15:56 pm
     Author     : VICTUS
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -81,16 +81,26 @@
             
             <h4>Individual</h4>
             <div class="task-category">
-                <p>No individual tasks assigned.</p>
+                <c:forEach var="task" items="${individualTasks}">
+                    <p>• ${task.title} <small>[${task.priority}]</small></p>
+                </c:forEach>
+                <c:if test="${empty individualTasks}">
+                    <p>No individual tasks found.</p>
+                </c:if>
             </div>
 
             <h4>Group</h4>
             <div class="task-category">
-                <p>• CSC555 Assignment</p>
+                <c:forEach var="task" items="${groupTasks}">
+                    <p>• ${task.title}</p>
+                </c:forEach>
+                <c:if test="${empty groupTasks}">
+                    <p>No group tasks found.</p>
+                </c:if>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-add" onclick="location.href='addTask.jsp'">Add Task</button>
+                <button class="btn btn-add" onclick="location.href='addtask.jsp'">Add Task</button>
                 <button class="btn btn-edit">Edit Task</button>
             </div>
         </aside>

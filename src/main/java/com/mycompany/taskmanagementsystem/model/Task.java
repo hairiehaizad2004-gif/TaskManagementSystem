@@ -14,15 +14,24 @@ public class Task {
     private String category; // To differentiate 'Individual' vs 'Group'
     private String priority;
     
-    // Constructor
-    public Task(String title, String category, String priority) {
-        this.title = title;
-        this.category = category;
-        this.priority = priority;
+    // Default Constructor
+    public Task() {
     }
 
     // Getters - These allow the JSP to read the data
     public String getTitle() { return title; }
     public String getCategory() { return category; }
     public String getPriority() { return priority; }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 }
