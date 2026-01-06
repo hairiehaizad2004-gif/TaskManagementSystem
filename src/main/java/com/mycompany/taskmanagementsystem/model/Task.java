@@ -8,8 +8,6 @@ package com.mycompany.taskmanagementsystem.model;
  *
  * @author VICTUS
  */
-package com.taskmanagement.model;
-
 public class Task {
     private String taskId;
     private String title;
