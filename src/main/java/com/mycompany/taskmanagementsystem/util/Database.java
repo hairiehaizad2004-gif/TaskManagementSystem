@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class Database {
     // These match the 'connectingString' attribute in your class diagram
-    private static final String URL = "jdbc:mysql://localhost:1527/TaskManagementSystem";
+    private static final String URL = "jdbc:derby:TaskManagementSystem";
     private static final String USER = "app"; 
     private static final String PASS = "app"; // Replace with your actual password
 
