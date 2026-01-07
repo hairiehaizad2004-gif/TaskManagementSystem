@@ -19,7 +19,7 @@
 <body>
     <div class="form-container">
         <h2>Create New Task</h2>
-        <form action="dashboard" method="POST">
+        <form action="addtaskservlet" method="POST">
             <label>Task Title</label>
             <input type="text" name="title" required placeholder="e.g., Study for Exam">
             

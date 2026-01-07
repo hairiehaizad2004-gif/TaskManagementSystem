@@ -7,25 +7,11 @@
  * Created: 6 Jan 2026
  */
 
-CREATE DATABASE IF NOT EXISTS task_management_db;
-USE task_management_db;
-
-CREATE TABLE clients (
-    client_id VARCHAR(50) PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL
-);
-
+-- Java DB (Derby) Syntax
 CREATE TABLE tasks (
-    task_id VARCHAR(50) PRIMARY KEY,
-    client_id VARCHAR(50),
+    task_id VARCHAR(50) NOT NULL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
-    due_date DATE,
-    status VARCHAR(20), -- e.g., 'Pending', 'Completed'
-    priority VARCHAR(20), -- e.g., 'High', 'Medium', 'Low'
     category VARCHAR(50),
-    FOREIGN KEY (client_id) REFERENCES clients(client_id)
+    priority VARCHAR(20)
 );
 

@@ -4,26 +4,24 @@
  */
 package com.mycompany.taskmanagementsystem.util;
 
-/**
- *
- * @author VICTUS
- */
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    // These match the 'connectingString' attribute in your class diagram
-    private static final String URL = "jdbc:derby:TaskManagementSystem";
-    private static final String USER = "app"; 
-    private static final String PASS = "app"; // Replace with your actual password
-
     public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(URL, USER, PASS);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("Driver not found", e);
-        }
+    try {
+        // Change from com.mysql.cj.jdbc.Driver to Derby Client Driver
+        Class.forName("org.apache.derby.jdbc.ClientDriver");
+        
+        // This URL must match your Services tab exactly
+        String url = "jdbc:derby://localhost:1527/TaskManagementSystem";
+        String user = "app"; // Check if your DB uses a specific user
+        String pass = "app"; 
+        
+        return DriverManager.getConnection(url, user, pass);
+    } catch (ClassNotFoundException e) {
+        throw new SQLException("Derby Driver not found", e);
     }
+}
 }
