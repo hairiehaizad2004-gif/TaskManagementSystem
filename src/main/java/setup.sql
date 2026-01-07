@@ -7,8 +7,8 @@
  * Created: 6 Jan 2026
  */
 
-CREATE DATABASE IF NOT EXISTS faculty_club_db;
-USE faculty_club_db;
+CREATE DATABASE IF NOT EXISTS task_management_db;
+USE task_management_db;
 
 CREATE TABLE clients (
     client_id VARCHAR(50) PRIMARY KEY,
