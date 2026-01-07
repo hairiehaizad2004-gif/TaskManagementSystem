@@ -6,32 +6,39 @@ package com.mycompany.taskmanagementsystem.model;
 
 /**
  *
- * @author VICTUS
+ * @author VICTUS Zulhairie
  */
 public class Task {
-    private String taskId;
+    private int id;
     private String title;
-    private String category; // To differentiate 'Individual' vs 'Group'
+    private String description;
+    private String status;
     private String priority;
-    
-    // Default Constructor
-    public Task() {
-    }
+    private String category;
 
-    // Getters - These allow the JSP to read the data
-    public String getTitle() { return title; }
-    public String getCategory() { return category; }
-    public String getPriority() { return priority; }
+    // Constructors
+    public Task() {}
     
-    public void setTitle(String title) {
+    public Task(int id, String title, String description, String status, String priority, String category) {
+        this.id = id;
         this.title = title;
-    }
-
-    public void setCategory(String category) {
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
         this.category = category;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getPrriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 }
