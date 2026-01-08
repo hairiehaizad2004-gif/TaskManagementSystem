@@ -18,74 +18,79 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
+import java.util.Locale;
+import java.text.DateFormatSymbols;
 
 @WebServlet(name = "SystemController", urlPatterns = {"/dashboard"})
 public class SystemController extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        List<Task> individualTasks = new ArrayList<>();
-        List<Task> groupTasks = new ArrayList<>();
-
-        // Logic from Class Diagram: generateTaskList()
-        try (Connection conn = Database.getConnection()) {
-            String sql = "SELECT * FROM tasks"; 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Task task = new Task();
-                task.setTitle(rs.getString("title"));
-                task.setCategory(rs.getString("category"));
-                task.setPriority(rs.getString("priority"));
-                
-                // Sort tasks into UI buckets
-                if ("Individual".equalsIgnoreCase(task.getCategory())) {
-                    individualTasks.add(task);
-                } else {
-                    groupTasks.add(task);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Pass data to the View (dashboard.jsp)
-        request.setAttribute("individualTasks", individualTasks);
-        request.setAttribute("groupTasks", groupTasks);
-        
-        // Forward to the JSP
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-    }
-    
-    @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  @Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    
-    // Get data from the form
-    String title = request.getParameter("title");
-    String category = request.getParameter("category");
-    String priority = request.getParameter("priority");
 
-    // Logic from Class Diagram: save(data)
+    // 1. DECLARE LISTS (This fixes the red errors from your screenshot)
+    List<Task> individualTasks = new ArrayList<>();
+    List<Task> groupTasks = new ArrayList<>();
+    List<Task> calendarTasks = new ArrayList<>();
+
+    // Get month and year from URL parameters, default to current
+    Calendar cal = Calendar.getInstance();
+    int month = (request.getParameter("month") != null) ? Integer.parseInt(request.getParameter("month")) : cal.get(Calendar.MONTH);
+    int year = (request.getParameter("year") != null) ? Integer.parseInt(request.getParameter("year")) : cal.get(Calendar.YEAR);
+
+    // Normalize for navigation overflow
+    cal.set(Calendar.MONTH, month);
+    cal.set(Calendar.YEAR, year);
+    cal.set(Calendar.DAY_OF_MONTH, 1);
+    
+    int currentMonth = cal.get(Calendar.MONTH);
+    int currentYear = cal.get(Calendar.YEAR);
+    int startDayOfWeek = cal.get(Calendar.DAY_OF_WEEK); 
+    int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    String monthName = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, java.util.Locale.ENGLISH);
+
+    // 2. FETCH TASKS (Using DUE_DATE to match your Java DB)
     try (Connection conn = Database.getConnection()) {
-        String sql = "INSERT INTO tasks (task_id, title, category, priority) VALUES (?, ?, ?, ?)";
+        // Changed TASK_DATE to DUE_DATE here
+        String sql = "SELECT * FROM APP.TASKS WHERE MONTH(DUE_DATE) = ? AND YEAR(DUE_DATE) = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, currentMonth + 1);
+        ps.setInt(2, currentYear);
+        ResultSet rs = ps.executeQuery();
         
-        // Generate a simple ID (e.g., using timestamp)
-        ps.setString(1, "T-" + System.currentTimeMillis());
-        ps.setString(2, title);
-        ps.setString(3, category);
-        ps.setString(4, priority);
-        
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+        while (rs.next()) {
+            Task task = new Task();
+            task.setTitle(rs.getString("TITLE")); 
+            task.setCategory(rs.getString("CATEGORY")); 
+            task.setPriority(rs.getString("PRIORITY")); 
+            task.setTaskDate(rs.getString("DUE_DATE")); 
+
+            // Add to the main calendar list
+            calendarTasks.add(task);
+
+            // 3. FILL SIDEBAR LISTS
+            if ("Individual".equalsIgnoreCase(task.getCategory())) {
+                individualTasks.add(task);
+            } else if ("Group".equalsIgnoreCase(task.getCategory())) {
+                groupTasks.add(task);
+            }
+        } 
+    } catch (SQLException e) { 
+        e.printStackTrace(); 
     }
 
-    // After saving, redirect back to the dashboard to see the new list
-    response.sendRedirect("dashboard");
+    // 4. PASS ALL LISTS TO JSP
+    request.setAttribute("individualTasks", individualTasks);
+    request.setAttribute("groupTasks", groupTasks);
+    request.setAttribute("calendarTasks", calendarTasks);
+    
+    request.setAttribute("daysInMonth", daysInMonth);
+    request.setAttribute("startDay", startDayOfWeek);
+    request.setAttribute("monthName", monthName);
+    request.setAttribute("currentMonth", currentMonth);
+    request.setAttribute("currentYear", currentYear);
+
+    request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 }
 }

@@ -39,5 +39,9 @@
             <button type="submit" class="btn-save">Save Task</button>
         </form>
     </div>
+    <div class="form-group">
+    <label for="taskDate">Due Date:</label>
+    <input type="date" name="taskDate" id="taskDate" required class="form-control">
+</div>
 </body>
 </html>
