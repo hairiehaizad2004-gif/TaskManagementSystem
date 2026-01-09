@@ -17,14 +17,14 @@ import java.util.List;
 
 public class TaskDAO {
 
-    public List<Task> getTasksByOwner(String owner) {
+    public List<Task> getTasksByOwner(int clientID) {
     List<Task> list = new ArrayList<>();
     String sql = "SELECT * FROM APP.TASKS WHERE OWNER = ?";
     
     try (Connection conn = Database.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
         
-        ps.setString(1, owner);
+        ps.setInt(1, clientID);
         ResultSet rs = ps.executeQuery();
         
         while (rs.next()) {

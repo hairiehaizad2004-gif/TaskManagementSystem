@@ -21,14 +21,15 @@ public class LoginServlet extends HttpServlet {
 
         // 2. Database Validation using ClientDAO
         ClientDAO clientDao = new ClientDAO();
-        boolean isValidClient = clientDao.validateClient(user, pass);
+        int clientId = clientDao.getClientId(user, pass);
 
-        if (isValidClient) {
+        if (clientId != -1) {
             // 3. Login Success: Create a session
             HttpSession session = request.getSession();
             
             // Set "username" to match what DashboardServlet expects
-            session.setAttribute("username", user); 
+            session.setAttribute("username", user);
+            session.setAttribute("clientId", clientId);
             
             // Redirect to the Dashboard Servlet (not the JSP directly)
             response.sendRedirect("dashboard");
