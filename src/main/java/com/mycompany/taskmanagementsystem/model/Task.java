@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.taskmanagementsystem.model;
-
+import java.sql.Date;
 /**
  *
  * @author VICTUS Zulhairie
@@ -15,18 +15,19 @@ public class Task {
     private String status;
     private String priority;
     private String category;
-    private String taskDate;
+    private Date taskDate;
     
     // Constructors
     public Task() {}
     
-    public Task(int id, String title, String description, String status, String priority, String category) {
+    public Task(int id, String title, String description, String status, String priority, String category, Date taskDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.category = category;
+        this.taskDate = taskDate;
     }
     // Getters and Setters
     // --- ID ---
@@ -54,6 +55,6 @@ public class Task {
     public void setCategory(String category) { this.category = category; }
 
     // --- Task Date ---
-    public String getTaskDate() { return taskDate; }
-    public void setTaskDate(String taskDate) { this.taskDate = taskDate; }
+    public Date getTaskDate() { return taskDate; }
+    public void setTaskDate(Date taskDate) { this.taskDate = taskDate; }
 }

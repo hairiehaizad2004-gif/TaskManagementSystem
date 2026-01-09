@@ -17,27 +17,27 @@ import java.util.List;
 
 public class TaskDAO {
 
-    public List<Task> getAllTasksByOwner(String username) {
-        List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT * FROM tasks WHERE owner = ?";
-
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Task task = new Task();
-                task.setId(rs.getInt("id"));
-                task.setTitle(rs.getString("title"));
-                task.setDescription(rs.getString("description"));
-                task.setStatus(rs.getString("status"));
-                tasks.add(task);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public List<Task> getTasksByOwner(String owner) {
+    List<Task> list = new ArrayList<>();
+    String sql = "SELECT * FROM APP.TASKS WHERE OWNER = ?";
+    
+    try (Connection conn = Database.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setString(1, owner);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Task t = new Task();
+            t.setTitle(rs.getString("TITLE"));
+            t.setCategory(rs.getString("CATEGORY"));
+            // Convert SQL Date to String (YYYY-MM-DD) for the JSP logic
+            t.setTaskDate(rs.getDate("TASK_DATE")); 
+            list.add(t);
         }
-        return tasks;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
     }
 }

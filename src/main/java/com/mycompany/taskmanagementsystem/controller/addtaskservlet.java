@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
 
 @WebServlet(name = "addtaskservlet", urlPatterns = {"/addtaskservlet"})
 public class addtaskservlet extends HttpServlet {
@@ -26,16 +27,21 @@ public class addtaskservlet extends HttpServlet {
         String title = request.getParameter("title");
         String category = request.getParameter("category");
         String priority = request.getParameter("priority");
+        String dateString = request.getParameter("taskDate");
+        
+        //convert string to date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(dateString);
 
         // 2. Insert into Database
         try (Connection conn = Database.getConnection()) {
             // task_id is usually a Primary Key, we generate a unique one here
-            String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, PRIORITY) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, PRIORITY, TASK_DATE) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "T-" + System.currentTimeMillis()); 
             ps.setString(2, title);
             ps.setString(3, category);
             ps.setString(4, priority);
+            ps.setDate(5, sqlDate);
             ps.executeUpdate();
             
         } catch (SQLException e) {

@@ -35,27 +35,23 @@
         <h2 style="text-align: center;">Current Task</h2>
         
         <h3>Individual</h3>
-        <div class="task-category-box">
-            <c:forEach var="task" items="${individualTasks}">
-                <p>• ${task.title} <small style="color:red;">[${task.priority}]</small></p>
+        <div class="task-box">
+            <h4>Individual</h4>
+            <c:forEach var="task" items="${taskList}">
+                <c:if test="${task.category == 'Individual'}">
+                    <div class="task-item">${task.title} - ${task.taskDate}</div>
+                </c:if>
             </c:forEach>
         </div>
 
         <h3>Group</h3>
-        <div class="task-category-box">
-                        <%-- Build the date string for the current cell to match the DB format --%>
-             <c:set var="formattedDay" value="${day < 10 ? '0'.concat(day) : day}" />
-             <c:set var="formattedMonth" value="${(currentMonth + 1) < 10 ? '0'.concat(currentMonth + 1) : (currentMonth + 1)}" />
-             <c:set var="fullDateStr" value="${currentYear}-${formattedMonth}-${formattedDay}" />
-
-             <c:forEach var="task" items="${calendarTasks}">
-                 <%-- Compare the DB date string to the current cell date string --%>
-                 <c:if test="${task.taskDate eq fullDateStr}">
-                     <div class="task-badge" style="background:#8e8cd8; color:white; padding:2px; margin-top:2px; font-size:10px;">
-                         ${task.title}
-                     </div>
-                 </c:if>
-             </c:forEach>
+        <div class="task-box">
+            <h4>Group</h4>
+            <c:forEach var="task" items="${taskList}">
+                <c:if test="${task.category == 'Group'}">
+                    <div class="task-item">${task.title} - ${task.taskDate}</div>
+                </c:if>
+            </c:forEach>
         </div>
 
         <div class="btn-row">
