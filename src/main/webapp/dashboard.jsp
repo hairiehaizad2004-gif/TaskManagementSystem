@@ -21,22 +21,27 @@
     .calendar-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
     table { width: 100%; border-collapse: collapse; }
     th { font-size: 12px; color: #666; padding: 10px; border-bottom: 1px solid #eee; }
-    td { height: 80px; border: 0.5px solid #eee; text-align: left; vertical-align: top; padding: 5px; }
-    .btn-row { display: flex; gap: 10px; }
-    .btn { flex: 1; padding: 12px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; background: #999; color: white; }
+    td { height: 100px; border: 0.5px solid #eee; text-align: left; vertical-align: top; padding: 5px; width: 14.28%; }
+    .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+    .btn { flex: 1; padding: 12px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; background: #999; color: white; text-align: center; text-decoration: none; }
     .btn-green { background-color: #27ae60; }
-    .task-badge { background:#8e8cd8; color:white; font-size:10px; margin-top:2px; border-radius:3px; padding:2px; }
+    .task-badge { background:#8e8cd8; color:white; font-size:10px; margin-top:2px; border-radius:3px; padding:2px; cursor: help; }
+    .empty-day { background: #f9f9f9; }
 </style>
 
 <div class="main-container">
     <aside class="current-task-panel">
         <h2 style="text-align: center;">Current Task</h2>
-        
+
         <h3>Individual</h3>
         <div class="task-box">
             <c:forEach var="task" items="${taskList}">
                 <c:if test="${task.category == 'Individual'}">
-                    <div class="task-item"><strong>${task.title}</strong> - ${task.dueDate}</div>
+                    <div class="task-item" style="padding: 5px; border-bottom: 1px solid #ddd;">
+                        <strong>${task.title}</strong><br>
+                        <%-- Fixed: Ensure property name matches your Task model --%>
+                        <small>Due: ${task.dueDate}</small>
+                    </div>
                 </c:if>
             </c:forEach>
         </div>
@@ -45,13 +50,16 @@
         <div class="task-box">
             <c:forEach var="task" items="${taskList}">
                 <c:if test="${task.category == 'Group'}">
-                    <div class="task-item"><strong>${task.title}</strong> - ${task.dueDate}</div>
+                    <div class="task-item" style="padding: 5px; border-bottom: 1px solid #ddd;">
+                        <strong>${task.title}</strong><br>
+                        <small>Due: ${task.dueDate}</small>
+                    </div>
                 </c:if>
             </c:forEach>
         </div>
 
         <div class="btn-row">
-            <button class="btn btn-green" onclick="location.href='addtask.jsp'">Add Task</button>
+            <a href="addtask.jsp" class="btn btn-green">Add Task</a>
             <button class="btn">Edit Task</button>
         </div>
     </aside>
@@ -69,24 +77,34 @@
             </thead>
             <tbody>
                 <tr>
-                    <%-- Safety check for startDay --%>
+                    <%-- 1. Correct Weekday Alignment: Fill empty slots before day 1 --%>
                     <c:if test="${startDay > 1}">
                         <c:forEach var="i" begin="1" end="${startDay - 1}">
-                            <td class="empty-day" style="background: #f9f9f9;"></td>
+                            <td class="empty-day"></td>
                         </c:forEach>
                     </c:if>
 
+                    <%-- 2. Main Calendar Day Loop --%>
                     <c:forEach var="day" begin="1" end="${daysInMonth}" varStatus="status">
                         <td>
                             <span class="day-number">${day}</span>
+
+                            <%-- 3. Null-Safe Task Check --%>
                             <c:forEach var="task" items="${taskList}">
-                                <fmt:formatDate value="${task.dueDate}" pattern="d" var="taskDay" />
-                                <c:if test="${taskDay == day}">
-                                    <div class="task-badge">${task.title}</div>
+                                <c:if test="${not empty task.dueDate}">
+                                    <fmt:formatDate value="${task.dueDate}" pattern="d" var="taskDay" />
+                                    
+                                    <%-- Match found: Render Task --%>
+                                    <c:if test="${taskDay == day}">
+                                        <div class="task-badge" title="Description: ${task.description}">
+                                            ${task.title}
+                                        </div>
+                                    </c:if>
                                 </c:if>
                             </c:forEach>
                         </td>
-                        <%-- Logic to wrap rows every 7 days --%>
+
+                        <%-- 4. Row Wrapping: Break row after Saturday --%>
                         <c:if test="${(status.index + startDay) % 7 == 0 && day != daysInMonth}">
                             </tr><tr>
                         </c:if>

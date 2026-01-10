@@ -15,29 +15,42 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Task operations.
+ * Maps database records from APP.TASKS to Task model objects.
+ */
 public class TaskDAO {
 
-    public List<Task> getTasksByOwner(int clientID) {
-    List<Task> list = new ArrayList<>();
-    String sql = "SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?";
-    
-    try (Connection conn = Database.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        
-        ps.setInt(1, clientID);
-        ResultSet rs = ps.executeQuery();
-        
-        while (rs.next()) {
-            Task t = new Task();
-            t.setTitle(rs.getString("TITLE"));
-            t.setCategory(rs.getString("CATEGORY"));
-            // Convert SQL Date to String (YYYY-MM-DD) for the JSP logic
-            t.setTaskDate(rs.getDate("TASK_DATE")); 
-            list.add(t);
+    public List<Task> getTasksByOwner(int clientId) {
+        List<Task> tasks = new ArrayList<>();
+        // Querying the APP.TASKS table for a specific client
+        String sql = "SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, clientId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Task task = new Task();
+                
+                // Retrieving all fields as defined in your Class Diagram
+                task.setTaskId(rs.getInt("TASK_ID"));
+                task.setTitle(rs.getString("TITLE"));
+                task.setDescription(rs.getString("DESCRIPTION"));
+                task.setCategory(rs.getString("CATEGORY"));
+                task.setPriority(rs.getString("PRIORITY"));
+                
+                // Using setDueDate to store the java.sql.Date for JSP formatting
+                task.setDueDate(rs.getDate("DUE_DATE"));
+                
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            // Logs database connection or query errors
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return list;
+        return tasks;
     }
 }
