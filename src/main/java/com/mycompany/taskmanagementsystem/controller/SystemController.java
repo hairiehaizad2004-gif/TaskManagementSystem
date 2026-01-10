@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.text.DateFormatSymbols;
 
-@WebServlet(name = "SystemController", urlPatterns = {"/dashboard"})
+@WebServlet(name = "SystemController", urlPatterns = {"/system/dashboard"})
 public class SystemController extends HttpServlet {
 
   @Override
