@@ -1,7 +1,7 @@
 <%-- 
     Document   : dashboard
-    Created on : 6 Jan 2026, 10:15:56 pm
-    Author     : VICTUS
+    Created on : 6 Jan 2026, 10:13:56 pm
+    Author     : Dell
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,6 +15,59 @@
     .current-task-panel { width: 350px; background: white; border: 2px solid #000; padding: 20px; border-radius: 4px; }
     .task-category-box { background: #e0e0e0; min-height: 150px; padding: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; }
     
+    /* Task item styling */
+    .task-item {
+        background: white;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .task-info {
+        flex: 1;
+    }
+    
+    .task-title {
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .task-date {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .task-actions {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .btn-small {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    
+    .btn-edit {
+        background-color: #3498db;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    .btn-small:hover {
+        opacity: 0.8;
+    }
+    
     /* Calendar styling to match image */
     .calendar-panel { flex: 1; background: white; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
     .calendar-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
@@ -23,9 +76,23 @@
     th { font-size: 12px; color: #666; padding: 10px; border-bottom: 1px solid #eee; }
     td { height: 80px; border: 0.5px solid #eee; text-align: left; vertical-align: top; padding: 5px; }
     .today-cell { background-color: #e8f4fd; }
+    
+    .task-badge {
+        background: #3498db;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+        margin-top: 3px;
+        cursor: pointer;
+    }
+    
+    .task-badge:hover {
+        background: #2980b9;
+    }
 
     /* Button Styling */
-    .btn-row { display: flex; gap: 10px; }
+    .btn-row { display: flex; gap: 10px; margin-top: 15px; }
     .btn { flex: 1; padding: 12px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; background: #999; color: white; }
     .btn-green { background-color: #27ae60; }
 </style>
@@ -35,28 +102,43 @@
         <h2 style="text-align: center;">Current Task</h2>
         
         <h3>Individual</h3>
-        <div class="task-box">
-            <h4>Individual</h4>
+        <div class="task-category-box">
             <c:forEach var="task" items="${taskList}">
                 <c:if test="${task.category == 'Individual'}">
-                    <div class="task-item">${task.title} - ${task.taskDate}</div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-date">${task.taskDate}</div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-small btn-edit" onclick="location.href='EditTaskServlet?id=${task.id}'">Edit</button>
+                            <button class="btn-small btn-delete" onclick="if(confirm('Delete this task?')) location.href='DeleteTaskServlet?id=${task.id}'">Delete</button>
+                        </div>
+                    </div>
                 </c:if>
             </c:forEach>
         </div>
 
         <h3>Group</h3>
-        <div class="task-box">
-            <h4>Group</h4>
+        <div class="task-category-box">
             <c:forEach var="task" items="${taskList}">
                 <c:if test="${task.category == 'Group'}">
-                    <div class="task-item">${task.title} - ${task.taskDate}</div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-date">${task.taskDate}</div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-small btn-edit" onclick="location.href='EditTaskServlet?id=${task.id}'">Edit</button>
+                            <button class="btn-small btn-delete" onclick="if(confirm('Delete this task?')) location.href='DeleteTaskServlet?id=${task.id}'">Delete</button>
+                        </div>
+                    </div>
                 </c:if>
             </c:forEach>
         </div>
 
         <div class="btn-row">
             <button class="btn btn-green" onclick="location.href='addtask.jsp'">Add Task</button>
-            <button class="btn">Edit Task</button>
         </div>
     </aside>
 
@@ -82,14 +164,11 @@
                         <span class="day-number">${day}</span>
                         
                         <c:forEach var="task" items="${calendarTasks}">
-                            <%-- Use JSTL to format the date or extract the day --%>
-                            <c:set var="taskDay" value="${task.taskDate.date}" /> 
-                                <c:if test="${taskDay == day}">
-                                    <div class="task-badge" style="background:#8e8cd8; color:white; font-size:10px; margin-top:2px; border-radius:3px; padding:2px;">
-                                        ${task.title}
-                                    </div>
-                                </c:if>
-                            </c:forEach>
+                            <c:set var="dayStr" value="${day < 10 ? '0'.concat(day) : day}" />
+                            <c:if test="${task.taskDate.endsWith('-'.concat(dayStr))}">
+                                <div class="task-badge" onclick="location.href='EditTaskServlet?id=${task.id}'">${task.title}</div>
+                            </c:if>
+                        </c:forEach>
                     </td>
 
                     <c:if test="${(status.count + startDay - 1) % 7 == 0}">
@@ -102,3 +181,4 @@
 </section>
 </div>
 
+<jsp:include page="footer.jsp" />
