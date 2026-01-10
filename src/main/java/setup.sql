@@ -9,7 +9,7 @@
 
 -- Java DB (Derby) Syntax
 CREATE TABLE tasks (
-    task_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    task_id INT NOT NULL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     category VARCHAR(50),
     priority VARCHAR(20)
