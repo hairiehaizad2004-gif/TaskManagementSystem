@@ -91,17 +91,20 @@
 
                             <%-- 3. Null-Safe Task Check --%>
                             <c:forEach var="task" items="${taskList}">
-                                <c:if test="${not empty task.dueDate}">
-                                    <fmt:formatDate value="${task.dueDate}" pattern="d" var="taskDay" />
-                                    
-                                    <%-- Match found: Render Task --%>
-                                    <c:if test="${taskDay == day}">
-                                        <div class="task-badge" title="Description: ${task.description}">
-                                            ${task.title}
-                                        </div>
-                                    </c:if>
+                            <c:if test="${not empty task.dueDate}">
+                                <%-- 1. Extract Day, Month, and Year from the task date --%>
+                                <fmt:formatDate value="${task.dueDate}" pattern="d" var="tDay" />
+                                <fmt:formatDate value="${task.dueDate}" pattern="M" var="tMonth" />
+                                <fmt:formatDate value="${task.dueDate}" pattern="yyyy" var="tYear" />
+
+                                <%-- 2. Compare all three parts to the current calendar view --%>
+                                <c:if test="${tDay == day && tMonth == currentMonth && tYear == currentYear}">
+                                    <div class="task-badge" title="${task.description}">
+                                        ${task.title}
+                                    </div>
                                 </c:if>
-                            </c:forEach>
+                            </c:if>
+                        </c:forEach>
                         </td>
 
                         <%-- 4. Row Wrapping: Break row after Saturday --%>
