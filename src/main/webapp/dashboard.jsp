@@ -82,11 +82,14 @@
                         <span class="day-number">${day}</span>
                         
                         <c:forEach var="task" items="${calendarTasks}">
-                            <c:set var="dayStr" value="${day < 10 ? '0'.concat(day) : day}" />
-                            <c:if test="${task.taskDate.endsWith('-'.concat(dayStr))}">
-                                <div class="task-badge">${task.title}</div>
-                            </c:if>
-                        </c:forEach>
+                            <%-- Use JSTL to format the date or extract the day --%>
+                            <c:set var="taskDay" value="${task.taskDate.date}" /> 
+                                <c:if test="${taskDay == day}">
+                                    <div class="task-badge" style="background:#8e8cd8; color:white; font-size:10px; margin-top:2px; border-radius:3px; padding:2px;">
+                                        ${task.title}
+                                    </div>
+                                </c:if>
+                            </c:forEach>
                     </td>
 
                     <c:if test="${(status.count + startDay - 1) % 7 == 0}">
@@ -99,4 +102,3 @@
 </section>
 </div>
 
-<jsp:include page="footer.jsp" />

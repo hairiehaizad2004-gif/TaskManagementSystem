@@ -19,7 +19,7 @@ public class TaskDAO {
 
     public List<Task> getTasksByOwner(int clientID) {
     List<Task> list = new ArrayList<>();
-    String sql = "SELECT * FROM APP.TASKS WHERE OWNER = ?";
+    String sql = "SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?";
     
     try (Connection conn = Database.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {

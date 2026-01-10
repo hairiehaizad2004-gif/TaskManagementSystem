@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 
 @WebServlet(name = "addtaskservlet", urlPatterns = {"/addtaskservlet"})
@@ -23,32 +24,40 @@ public class addtaskservlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. Get data from the addTask.jsp form fields
+        // 1. Get the Client ID from the Session (The Foreign Key)
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("clientId") == null) {
+            response.sendRedirect("Login.jsp");
+            return;
+        }
+        int clientId = (int) session.getAttribute("clientId");
+
+        // 2. Get Task details from the form
         String title = request.getParameter("title");
         String category = request.getParameter("category");
-        String priority = request.getParameter("priority");
-        String dateString = request.getParameter("taskDate");
-        
-        //convert string to date
-        java.sql.Date sqlDate = java.sql.Date.valueOf(dateString);
+        String dateStr = request.getParameter("taskDate");
 
-        // 2. Insert into Database
-        try (Connection conn = Database.getConnection()) {
-            // task_id is usually a Primary Key, we generate a unique one here
-            String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, PRIORITY, TASK_DATE) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "T-" + System.currentTimeMillis()); 
+        // 3. Insert into database including the CLIENT_ID
+        // Generate a unique ID since the database won't do it for VARCHAR
+        String uniqueTaskId = java.util.UUID.randomUUID().toString().substring(0, 8); 
+
+        String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, TASK_DATE, CLIENT_ID) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, uniqueTaskId); // Send the generated String ID
             ps.setString(2, title);
             ps.setString(3, category);
-            ps.setString(4, priority);
-            ps.setDate(5, sqlDate);
+            ps.setDate(4, java.sql.Date.valueOf(dateStr));
+            ps.setInt(5, clientId);
+            
             ps.executeUpdate();
+            response.sendRedirect("dashboard"); // Send them back to their updated dashboard
             
         } catch (SQLException e) {
             e.printStackTrace();
+            response.getWriter().println("Database Error: " + e.getMessage());
         }
-
-        // 3. Redirect back to the dashboard to see the new task
-        response.sendRedirect("dashboard");
     }
 }
