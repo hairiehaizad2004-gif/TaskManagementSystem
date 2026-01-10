@@ -13,8 +13,7 @@
         body { font-family: sans-serif; background: #f4f4f4; padding: 50px; }
         .form-container { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; border: 1px solid #ccc; }
         input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .btn-save { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; font-size: 16px; border-radius: 4px; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
+        .btn-save { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -24,9 +23,6 @@
             <label>Task Title</label>
             <input type="text" name="title" required placeholder="e.g., Study for Exam">
             
-            <label>Description</label>
-            <textarea name="description" rows="3" placeholder="Enter task details..."></textarea>
-
             <label>Category</label>
             <select name="category">
                 <option value="Individual">Individual</option>
@@ -36,15 +32,18 @@
             <label>Priority</label>
             <select name="priority">
                 <option value="Low">Low</option>
-                <option value="Medium" selected>Medium</option>
+                <option value="Medium">Medium</option>
                 <option value="High">High</option>
             </select>
-            
-            <label for="taskDate">Due Date:</label>
-            <input type="date" name="taskDate" id="taskDate" required>   
-            
+               
+            </div>
+                <div class="form-group">
+                <label for="taskDate">Due Date:</label>
+                <input type="date" name="taskDate" id="taskDate" required class="form-control">
+            </div>
+    
             <button type="submit" class="btn-save">Save Task</button>
         </form>
-    </div>
+    
 </body>
 </html>

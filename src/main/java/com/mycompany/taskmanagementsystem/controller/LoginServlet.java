@@ -27,10 +27,9 @@ public class LoginServlet extends HttpServlet {
             // 3. Login Success: Create a session
             HttpSession session = request.getSession();
             
-            session.setAttribute("clientId", clientId);
             // Set "username" to match what DashboardServlet expects
             session.setAttribute("username", user);
-            
+            session.setAttribute("clientId", clientId);
             
             // Redirect to the Dashboard Servlet (not the JSP directly)
             response.sendRedirect("dashboard");

@@ -10,7 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 // RENAMED to DashboardServlet (Capital D) to match best practices and avoid naming errors
-@WebServlet(name = "dashboardServlet", urlPatterns = {"/dashboard"}) 
+@WebServlet(name = "DashboardServlet", urlPatterns = {"/system"}) 
 public class dashboardServlet extends HttpServlet {
     
     @Override

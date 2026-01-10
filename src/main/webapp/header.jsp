@@ -34,11 +34,10 @@
             <div class="profile-icon">👤</div>
             <div>
                 <strong>Task Management System</strong><br>
-                <small>Welcome, ${not empty username ? username : 'Guest'}!</small>
+                <small>Welcome, User!</small>
             </div>
         </div>
         <a href="home" class="nav-link nav-active">🏠 Home</a>
         <a href="task-status" class="nav-link">📊 Dashboard</a>
         <a href="task-details.jsp" class="nav-link">📋 Task Details</a>
-        <a href="LogoutServlet" class="nav-link" style="color: red;">🚪 Logout</a>
     </header>
