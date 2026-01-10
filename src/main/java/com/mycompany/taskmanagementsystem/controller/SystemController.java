@@ -64,7 +64,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             task.setTitle(rs.getString("TITLE")); 
             task.setCategory(rs.getString("CATEGORY")); 
             task.setPriority(rs.getString("PRIORITY")); 
-            task.setTaskDate(rs.getDate("DUE_DATE")); 
+            task.setDueDate(rs.getDate("DUE_DATE")); 
 
             // Add to the main calendar list
             calendarTasks.add(task);
