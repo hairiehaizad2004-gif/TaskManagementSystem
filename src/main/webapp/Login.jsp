@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,11 +16,11 @@
             --primary-purple: #8e8cd8;
             --hover-purple: #7a78c2;
             --bg-light: #f8f9fa;
-            --card-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
             background-color: var(--bg-light); 
             display: flex; 
             justify-content: center; 
@@ -31,37 +32,48 @@
         .login-container { 
             background: white; 
             padding: 40px; 
-            border-radius: 16px; 
+            border-radius: 20px; 
             box-shadow: var(--card-shadow); 
-            width: 380px; 
+            width: 100%;
+            max-width: 400px; 
+            text-align: center;
         }
 
-        h2 { text-align: center; color: #2d3436; margin-bottom: 10px; font-weight: 700; }
-        .subtitle { text-align: center; color: #b2bec3; margin-bottom: 30px; font-size: 14px; }
+        h2 { color: #2d3436; margin-bottom: 5px; font-weight: 700; font-size: 24px; }
+        .subtitle { color: #b2bec3; margin-bottom: 30px; font-size: 20px; font-weight: 700; }
 
+        /* Professional Error Message Box */
         .error-msg { 
             background-color: #fff2f2; 
             color: #d63031; 
-            padding: 10px; 
-            border-radius: 8px; 
+            padding: 12px; 
+            border-radius: 10px; 
             font-size: 13px; 
-            text-align: center; 
             margin-bottom: 20px; 
+            border: 1px solid #ffeded;
         }
 
-        label { font-size: 14px; color: #636e72; font-weight: 600; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+
+        label { 
+            display: block;
+            font-size: 14px; 
+            color: #636e72; 
+            font-weight: 600; 
+            margin-bottom: 8px;
+        }
 
         input[type="text"], input[type="password"] { 
             width: 100%; 
-            padding: 12px; 
-            margin: 8px 0 20px 0; 
+            padding: 12px 15px; 
             border: 1px solid #dfe6e9; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             box-sizing: border-box; 
-            transition: border-color 0.3s;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
-        input:focus { border-color: var(--primary-purple); outline: none; }
+        input:focus { border-color: var(--primary-purple); outline: none; box-shadow: 0 0 0 3px rgba(142, 140, 216, 0.1); }
 
         input[type="submit"] { 
             width: 100%; 
@@ -69,17 +81,18 @@
             background-color: var(--primary-purple); 
             color: white; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             cursor: pointer; 
             font-size: 16px; 
             font-weight: bold;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         input[type="submit"]:hover { 
             background-color: var(--hover-purple); 
             transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(142, 140, 216, 0.4);
+            box-shadow: 0 5px 15px rgba(142, 140, 216, 0.3);
         }
 
         .footer-link { text-align: center; margin-top: 25px; font-size: 14px; color: #636e72; }
@@ -91,18 +104,23 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Task Management System</p>
         
+        <%-- Display error message if login fails --%>
         <c:if test="${not empty errorMessage}">
             <div class="error-msg">${errorMessage}</div>
         </c:if>
 
         <form action="LoginServlet" method="POST">
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Enter your username" required>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter your username" required>
+            </div>
             
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Enter your password" required>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
             
-            <input type="submit" value="Login to Dashboard">
+            <input type="submit" value="Login">
         </form>
         
         <div class="footer-link">

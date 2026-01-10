@@ -109,16 +109,24 @@ td {
     margin-bottom: 8px;
 }
 
+/* Calendar Task Badge Styling */
 .task-badge {
+    background-color: #8e8cd8; /* Matches the soft purple in your list */
     color: white;
-    font-size: 11px;
     padding: 4px 8px;
-    border-radius: 6px;
-    margin-bottom: 4px;
+    border-radius: 6px; /* Matching the rounded corners of your side cards */
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: block;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-weight: bold;
+}
+
+/* If you want to differentiate Group tasks like your list does */
+.task-badge.group-task {
+    background-color: #60a5fa; /* Matches the blue "sssss" task in your list */
 }
 
 .btn-row { display: flex; gap: 10px; margin-top: 20px; }
