@@ -24,40 +24,54 @@ public class addtaskservlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. Get the Client ID from the Session (The Foreign Key)
+        // 1. Get the Client ID from the Session
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("clientId") == null) {
             response.sendRedirect("Login.jsp");
             return;
         }
+        
+        // Assuming clientId was stored as an Integer during Login
         int clientId = (int) session.getAttribute("clientId");
 
         // 2. Get Task details from the form
         String title = request.getParameter("title");
+        String description = request.getParameter("description");
         String category = request.getParameter("category");
-        String dateStr = request.getParameter("taskDate");
+        String priority = request.getParameter("priority");
+        String dateStr = request.getParameter("taskDate"); // renamed to match your variable below
 
-        // 3. Insert into database including the CLIENT_ID
-        // Generate a unique ID since the database won't do it for VARCHAR
-        String uniqueTaskId = java.util.UUID.randomUUID().toString().substring(0, 8); 
-
-        String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, TASK_DATE, CLIENT_ID) VALUES (?, ?, ?, ?, ?)";
+        // 3. SQL String (Only 6 columns, TASK_ID is omitted because it's Auto-Increment)
+        String sql = "INSERT INTO APP.TASKS (TITLE, DESCRIPTION, CATEGORY, PRIORITY, DUE_DATE, CLIENT_ID) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setString(1, uniqueTaskId); // Send the generated String ID
-            ps.setString(2, title);
+            // Fix: ps.setX(index, value) must match the order in the SQL string above
+            ps.setString(1, title);
+            ps.setString(2, description);
             ps.setString(3, category);
-            ps.setDate(4, java.sql.Date.valueOf(dateStr));
-            ps.setInt(5, clientId);
+            ps.setString(4, priority);
             
-            ps.executeUpdate();
-            response.sendRedirect("dashboard"); // Send them back to their updated dashboard
+            // Fix: Convert the String from the HTML date input to a SQL Date
+            if (dateStr != null && !dateStr.isEmpty()) {
+                ps.setDate(5, java.sql.Date.valueOf(dateStr));
+            } else {
+                ps.setNull(5, java.sql.Types.DATE);
+            }
+            
+            ps.setInt(6, clientId);
+            
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                response.sendRedirect("dashboard"); // Ensure this matches your dashboard file name
+            }
             
         } catch (SQLException e) {
             e.printStackTrace();
             response.getWriter().println("Database Error: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            response.getWriter().println("Invalid Date Format: " + dateStr);
         }
     }
 }
