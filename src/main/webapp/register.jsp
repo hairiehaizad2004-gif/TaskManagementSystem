@@ -17,8 +17,8 @@
             input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
             button { width: 100%; padding: 10px; background-color: #6a1b9a; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
             button:hover { background-color: #4a148c; }
-            .login-link { text-align: center; margin-top: 15px; font-size: 14px; }
-            .login-link a { color: #6a1b9a; text-decoration: none; }
+            .register-link { text-align: center; margin-top: 15px; font-size: 14px; }
+            .register-link a { color: #6a1b9a; text-decoration: none; }
         </style>
     </head>
     <body>
