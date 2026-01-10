@@ -41,7 +41,9 @@ public class addtaskservlet extends HttpServlet {
         // Generate a unique ID since the database won't do it for VARCHAR
         String uniqueTaskId = java.util.UUID.randomUUID().toString().substring(0, 8); 
 
-        String sql = "INSERT INTO APP.TASKS (TASK_ID, TITLE, CATEGORY, TASK_DATE, CLIENT_ID) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO APP.TASKS (TITLE, DESCRIPTION, CATEGORY, PRIORITY, STATUS, DUE_DATE) VALUES (?, ?, ?, ?, ?, ?)";
+// No TASK_ID - it's auto-generated! ✅
+// Using DUE_DATE instead of TASK_DATE ✅
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
