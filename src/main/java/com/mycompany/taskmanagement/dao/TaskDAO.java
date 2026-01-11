@@ -154,6 +154,45 @@ public class TaskDAO {
         }
     }
     
+    public List<Task> getFilteredTasks(int clientId, String category, String sortBy) {
+        List<Task> tasks = new ArrayList<>(); // Using his naming "tasks" internally
+        StringBuilder sql = new StringBuilder("SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?");
+
+        // Apply your Category filter
+        if (category != null && !category.trim().isEmpty()) {
+            sql.append(" AND CATEGORY = '").append(category).append("'");
+        }
+
+        // Apply your Sort logic
+        if (sortBy != null && sortBy.equals("due_date")) {
+            sql.append(" ORDER BY DUE_DATE ASC");
+        } else {
+            sql.append(" ORDER BY CASE WHEN PRIORITY = 'High' THEN 1 WHEN PRIORITY = 'Medium' THEN 2 ELSE 3 END ASC");
+        }
+
+        try (Connection conn = com.mycompany.taskmanagementsystem.util.Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setInt(1, clientId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Task task = new Task();
+                task.setTaskId(rs.getInt("TASK_ID")); // Matches Task.java
+                task.setTitle(rs.getString("TITLE"));
+                task.setDescription(rs.getString("DESCRIPTION"));
+                task.setCategory(rs.getString("CATEGORY"));
+                task.setPriority(rs.getString("PRIORITY"));
+                task.setDueDate(rs.getDate("DUE_DATE"));
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tasks; // Returns the list named 'tasks'
+    }
+
+    
     /**
      * Delete a task
      */
