@@ -41,7 +41,7 @@
             </select>
             
             <label for="dueDate">Due Date:</label>
-            <input type="date" name="dueDate" id="dueDate" required>   
+            <input type="date" name="taskDate" id="taskDate" required>   
             
             <button type="submit" class="btn-save">Save Task</button>
         </form>
