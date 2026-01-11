@@ -1,12 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Muhamad Zulhairie
- */
 package com.mycompany.taskmanagement.dao;
 
 import com.mycompany.taskmanagementsystem.model.Task;
@@ -16,41 +7,169 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data Access Object for Task operations.
- * Maps database records from APP.TASKS to Task model objects.
+ * Data Access Object for Task operations
+ * ENHANCED: Added toggle status method
  */
 public class TaskDAO {
 
-    public List<Task> getTasksByOwner(int clientId) {
-        List<Task> tasks = new ArrayList<>();
-        // Querying the APP.TASKS table for a specific client
+    /**
+     * Get all tasks for a specific client
+     */
+    public List<Task> getTasksByOwner(int clientID) {
+        List<Task> list = new ArrayList<>();
         String sql = "SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?";
-
+        
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setInt(1, clientId);
+            ps.setInt(1, clientID);
             ResultSet rs = ps.executeQuery();
-
+            
             while (rs.next()) {
-                Task task = new Task();
-                
-                // Retrieving all fields as defined in your Class Diagram
+                Task t = new Task();
+                t.setTaskId(rs.getInt("TASK_ID"));
+                t.setTitle(rs.getString("TITLE"));
+                t.setDescription(rs.getString("DESCRIPTION"));
+                t.setCategory(rs.getString("CATEGORY"));
+                t.setPriority(rs.getString("PRIORITY"));
+                t.setStatus(rs.getString("STATUS"));
+                t.setDueDate(rs.getDate("DUE_DATE")); 
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    /**
+     * Get a single task by ID
+     */
+    public Task getTaskById(int taskId) {
+        Task task = null;
+        String sql = "SELECT * FROM APP.TASKS WHERE TASK_ID = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, taskId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                task = new Task();
                 task.setTaskId(rs.getInt("TASK_ID"));
                 task.setTitle(rs.getString("TITLE"));
                 task.setDescription(rs.getString("DESCRIPTION"));
                 task.setCategory(rs.getString("CATEGORY"));
                 task.setPriority(rs.getString("PRIORITY"));
-                
-                // Using setDueDate to store the java.sql.Date for JSP formatting
+                task.setStatus(rs.getString("STATUS"));
                 task.setDueDate(rs.getDate("DUE_DATE"));
-                
-                tasks.add(task);
             }
         } catch (SQLException e) {
-            // Logs database connection or query errors
             e.printStackTrace();
         }
-        return tasks;
+        return task;
+    }
+    
+    /**
+     * Update task details
+     * Use case: UPDATE TASK DETAILS
+     */
+    public boolean updateTask(Task task) {
+        String sql = "UPDATE APP.TASKS SET TITLE = ?, DESCRIPTION = ?, CATEGORY = ?, PRIORITY = ?, DUE_DATE = ? WHERE TASK_ID = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, task.getTitle());
+            ps.setString(2, task.getDescription());
+            ps.setString(3, task.getCategory());
+            ps.setString(4, task.getPriority());
+            ps.setDate(5, task.getDueDate());
+            ps.setInt(6, task.getTaskId());
+            
+            int result = ps.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Mark task as completed
+     * Use case: MARK COMPLETED TASK
+     */
+    public boolean markTaskAsCompleted(int taskId) {
+        String sql = "UPDATE APP.TASKS SET STATUS = 'Completed' WHERE TASK_ID = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, taskId);
+            int result = ps.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Mark task as incomplete (reopen task)
+     * NEW METHOD: Allows users to unmark completed tasks
+     */
+    public boolean markTaskAsIncomplete(int taskId) {
+        String sql = "UPDATE APP.TASKS SET STATUS = 'Pending' WHERE TASK_ID = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, taskId);
+            int result = ps.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Toggle task status between Completed and Pending
+     * NEW METHOD: Smart toggle based on current status
+     */
+    public boolean toggleTaskStatus(int taskId) {
+        // First, get current status
+        Task task = getTaskById(taskId);
+        if (task == null) return false;
+        
+        // Toggle based on current status
+        if ("Completed".equals(task.getStatus())) {
+            return markTaskAsIncomplete(taskId);
+        } else {
+            return markTaskAsCompleted(taskId);
+        }
+    }
+    
+    /**
+     * Delete a task
+     */
+    public boolean deleteTask(int taskId) {
+        String sql = "DELETE FROM APP.TASKS WHERE TASK_ID = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, taskId);
+            int result = ps.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
