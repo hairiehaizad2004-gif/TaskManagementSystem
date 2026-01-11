@@ -41,8 +41,8 @@ public class ToggleTaskStatusServlet extends HttpServlet {
                 }
             }
             
-            // Redirect back to dashboard
-            response.sendRedirect("tasklist");
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer : "tasklist");
             
         } catch (NumberFormatException e) {
             System.err.println("Invalid task ID: " + e.getMessage());

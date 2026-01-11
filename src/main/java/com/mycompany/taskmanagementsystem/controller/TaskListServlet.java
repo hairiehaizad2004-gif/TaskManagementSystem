@@ -37,10 +37,11 @@ public class TaskListServlet extends HttpServlet {
         int clientId = (int) session.getAttribute("clientId");
         String category = request.getParameter("category"); // From the dropdown in tasklist.jsp
         String sortBy = request.getParameter("sortBy");     // From the dropdown in tasklist.jsp
+        String status = request.getParameter("status");
 
         // 3. Fetch data from the DAO using the filtered method
         TaskDAO taskDAO = new TaskDAO();
-        List<Task> taskList = taskDAO.getFilteredTasks(clientId, category, sortBy);
+        List<Task> taskList = taskDAO.getFilteredTasks(clientId, category, status, sortBy);
 
         // 4. Set the data as a request attribute for the JSP to read
         request.setAttribute("tasksList", taskList);

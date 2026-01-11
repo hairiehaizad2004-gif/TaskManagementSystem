@@ -154,7 +154,7 @@ public class TaskDAO {
         }
     }
     
-    public List<Task> getFilteredTasks(int clientId, String category, String sortBy) {
+    public List<Task> getFilteredTasks(int clientId, String category, String status, String sortBy) {
         List<Task> tasks = new ArrayList<>(); // Using his naming "tasks" internally
         StringBuilder sql = new StringBuilder("SELECT * FROM APP.TASKS WHERE CLIENT_ID = ?");
 
@@ -162,7 +162,11 @@ public class TaskDAO {
         if (category != null && !category.trim().isEmpty()) {
             sql.append(" AND CATEGORY = '").append(category).append("'");
         }
-
+        
+        if (status != null && !status.trim().isEmpty()) {
+        sql.append(" AND STATUS = '").append(status).append("'");
+        }
+        
         // Apply your Sort logic
         if (sortBy != null && sortBy.equals("due_date")) {
             sql.append(" ORDER BY DUE_DATE ASC");

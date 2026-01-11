@@ -63,6 +63,13 @@
                         <option value="Individual" ${param.category == 'Individual' ? 'selected' : ''}>Individual</option>
                         <option value="Group" ${param.category == 'Group' ? 'selected' : ''}>Group</option>
                     </select>
+                    
+                    <label class="small fw-bold text-muted">STATUS</label>
+                    <select name="status" class="form-select mb-3">
+                        <option value="">All Statuses</option>
+                        <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                        <option value="Completed" ${param.status == 'Completed' ? 'selected' : ''}>✅ Completed</option>
+                    </select>
 
                     <label class="small fw-bold text-muted">SORT BY</label>
                     <select name="sortBy" class="form-select mb-4">
@@ -84,6 +91,7 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Category</th>
+                                <th>Description</th>
                                 <th>Priority</th>
                                 <th>Due Date</th>
                                 <th>Status</th>
@@ -96,6 +104,7 @@
                                 <tr>
                                     <td><strong>${task.title}</strong></td>
                                     <td><span class="badge-category">${task.category}</span></td>
+                                    <td class="small text-muted">${task.description}</td>
                                     <td>
                                         <span class="fw-bold" style="color: ${task.priority == 'High' ? 'var(--priority-high)' : (task.priority == 'Medium' ? 'var(--priority-medium)' : '#2ecc71')};">
                                             ● ${task.priority}
@@ -104,7 +113,7 @@
                                     <td>${task.dueDate}</td>
                                     <td>
                                     <%-- Clickable link that triggers the toggle servlet --%>
-                                        <a href="toggleTaskStatus?taskId=${task.taskId}" style="text-decoration: none;">
+                                        <a href="toggleTaskStatus?taskId=${task.taskId}&status=${param.status}&category=${param.category}&sortBy=${param.sortBy}" style="text-decoration: none;">
                                             <span class="fw-bold" style="color: ${task.status == 'Completed' ? '#27ae60' : '#f39c12'};">
                                                 ${task.status == 'Completed' ? '✅ Completed' : '⏳ Pending'}
                                             </span>
