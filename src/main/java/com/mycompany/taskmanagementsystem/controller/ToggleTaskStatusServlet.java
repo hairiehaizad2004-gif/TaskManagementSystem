@@ -29,24 +29,20 @@ public class ToggleTaskStatusServlet extends HttpServlet {
         
         try {
             // Get task ID from request
-            String taskIdStr = request.getParameter("taskId");
-            
+            String taskIdStr = request.getParameter("taskId"); 
+
             if (taskIdStr != null && !taskIdStr.trim().isEmpty()) {
                 int taskId = Integer.parseInt(taskIdStr);
-                
-                // Toggle the task status
                 TaskDAO dao = new TaskDAO();
-                boolean success = dao.toggleTaskStatus(taskId);
-                
+                boolean success = dao.toggleTaskStatus(taskId); // Check if this method actually executes
+    
                 if (success) {
-                    System.out.println("Task status toggled successfully: ID=" + taskId);
-                } else {
-                    System.err.println("Failed to toggle task status: ID=" + taskId);
+                    System.out.println("Success! ID: " + taskId);
                 }
             }
             
             // Redirect back to dashboard
-            response.sendRedirect("dashboard");
+            response.sendRedirect("tasklist");
             
         } catch (NumberFormatException e) {
             System.err.println("Invalid task ID: " + e.getMessage());

@@ -184,6 +184,7 @@ public class TaskDAO {
                 task.setCategory(rs.getString("CATEGORY"));
                 task.setPriority(rs.getString("PRIORITY"));
                 task.setDueDate(rs.getDate("DUE_DATE"));
+                task.setStatus(rs.getString("STATUS"));
                 tasks.add(task);
             }
         } catch (SQLException e) {

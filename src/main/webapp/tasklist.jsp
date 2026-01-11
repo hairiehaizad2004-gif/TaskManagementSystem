@@ -103,9 +103,12 @@
                                     </td>
                                     <td>${task.dueDate}</td>
                                     <td>
-                                        <span class="fw-bold" style="color: ${task.status == 'Completed' ? 'var(--priority-high)' : (task.status == 'In Progress' ? 'var(--priority-medium)' : '#2ecc71')};">
-                                            ● ${task.status}
-                                        </span>
+                                    <%-- Clickable link that triggers the toggle servlet --%>
+                                        <a href="toggleTaskStatus?taskId=${task.taskId}" style="text-decoration: none;">
+                                            <span class="fw-bold" style="color: ${task.status == 'Completed' ? '#27ae60' : '#f39c12'};">
+                                                ${task.status == 'Completed' ? '✅ Completed' : '⏳ Pending'}
+                                            </span>
+                                        </a>
                                     </td>
                                     <td>
                                         <a href="UpdateTask.jsp?id=${task.taskId}" class="btn-update">
