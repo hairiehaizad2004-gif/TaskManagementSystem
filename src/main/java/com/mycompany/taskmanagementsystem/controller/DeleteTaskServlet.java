@@ -45,16 +45,16 @@ public class DeleteTaskServlet extends HttpServlet {
                 }
             }
             
-            // Redirect back to dashboard
-            response.sendRedirect("dashboard");
+            // Redirect back to tasklist
+            response.sendRedirect("tasklist");
             
         } catch (NumberFormatException e) {
             System.err.println("Invalid task ID: " + e.getMessage());
-            response.sendRedirect("dashboard");
+            response.sendRedirect("tasklist");
         } catch (Exception e) {
             System.err.println("Error deleting task: " + e.getMessage());
             e.printStackTrace();
-            response.sendRedirect("dashboard");
+            response.sendRedirect("tasklist");
         }
     }
     

@@ -114,6 +114,12 @@
                                         <a href="UpdateTask.jsp?id=${task.taskId}" class="btn-update">
                                             Update 
                                         </a>
+                                        <a href="deleteTask?taskId=${task.taskId}" 
+                                        class="btn btn-danger btn-sm" 
+                                        onclick="return confirm('Are you sure you want to delete this task?');"
+                                        style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; text-decoration: none;">
+                                            Delete
+                                        </a>
                                     </td>
                                 </tr>
                             </c:forEach>
