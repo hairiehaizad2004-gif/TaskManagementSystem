@@ -15,19 +15,19 @@ public class Task {
     private String status;
     private String priority;
     private String category;
-    private Date taskDate;
+    private Date dueDate;
     
     // Constructors
     public Task() {}
     
-    public Task(int id, String title, String description, String status, String priority, String category, Date taskDate) {
+    public Task(int id, String title, String description, String status, String priority, String category, Date dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.category = category;
-        this.taskDate = taskDate;
+        this.dueDate = dueDate;
     }
     // Getters and Setters
     // --- ID ---
@@ -55,6 +55,6 @@ public class Task {
     public void setCategory(String category) { this.category = category; }
 
     // --- Task Date ---
-    public Date getTaskDate() { return taskDate; }
-    public void setTaskDate(Date taskDate) { this.taskDate = taskDate; }
+    public Date getdueDate() { return dueDate; }
+    public void setdueDate(Date dueDate) { this.dueDate = dueDate; }
 }
