@@ -90,7 +90,7 @@
 
     <ul class="nav-menu">
         <li><a href="dashboard" class="nav-link">🏠 Home</a></li>
-        <li><a href="dashboard" class="nav-link">📊 Dashboard</a></li>
+        <li><a href="dashboard2" class="nav-link">📊 Dashboard</a></li>
         <li><a href="tasklist" class="nav-link">📋 Task List</a></li>
     </ul>
 
