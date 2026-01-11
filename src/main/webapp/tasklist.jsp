@@ -28,6 +28,22 @@
             background: white; padding: 25px; border-radius: 16px; box-shadow: var(--card-shadow); 
         }
         .badge-category { background-color: var(--primary-purple); color: white; padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; }
+        .btn-update {
+        background-color: #6c5ce7; /* Purple to match your header */
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+        display: inline-block;
+        transition: background 0.3s;
+        }
+
+        .btn-update:hover {
+            background-color: #a29bfe; /* Lighter purple on hover */
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +86,8 @@
                                 <th>Category</th>
                                 <th>Priority</th>
                                 <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,6 +102,16 @@
                                         </span>
                                     </td>
                                     <td>${task.dueDate}</td>
+                                    <td>
+                                        <span class="fw-bold" style="color: ${task.status == 'Completed' ? 'var(--priority-high)' : (task.status == 'In Progress' ? 'var(--priority-medium)' : '#2ecc71')};">
+                                            ● ${task.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="UpdateTask.jsp?id=${task.taskId}" class="btn-update">
+                                            Update 
+                                        </a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>

@@ -6,6 +6,29 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.mycompany.taskmanagement.dao.TaskDAO"%>
+<%@page import="com.mycompany.taskmanagementsystem.model.Task"%>
+<%
+    // 1. Get the task ID from the URL (e.g., UpdateTask.jsp?id=123)
+    String idStr = request.getParameter("id");
+    
+    if (idStr != null && !idStr.isEmpty()) {
+        try {
+            int taskId = Integer.parseInt(idStr);
+            TaskDAO dao = new TaskDAO();
+            
+            // 2. Fetch the task details from the database
+            Task task = dao.getTaskById(taskId);
+            
+            // 3. Set the task as a request attribute so ${task} works below
+            if (task != null) {
+                request.setAttribute("task", task);
+            }
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid Task ID format.");
+        }
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -155,18 +178,18 @@
         </div>
     </c:if>
     
-    <c:if test="${empty task}">
+    <c:if test="${empty task.taskId}">
         <div class="error-message">
             <strong>Error:</strong> Task not found. Please return to the dashboard.
         </div>
         <div style="text-align: center; margin-top: 20px;">
-            <a href="dashboard" class="btn-cancel">Return to Dashboard</a>
+            <a href="tasklist" class="btn-cancel">Return to Task List</a>
         </div>
     </c:if>
     
     <c:if test="${not empty task}">
         <form action="updateTask" method="POST" onsubmit="return validateForm()">
-            <input type="hidden" name="taskId" value="${task.id}">
+            <input type="hidden" name="taskId" value="${task.taskId}">
 
             <div class="form-group">
                 <label>Title <span class="required">*</span></label>
@@ -201,7 +224,7 @@
             </div>
 
             <div class="button-group">
-                <a href="dashboard" class="btn-cancel">Cancel</a>
+                <a href="tasklist" class="btn-cancel">Cancel</a>
                 <button type="submit">💾 Save Changes</button>
             </div>
         </form>

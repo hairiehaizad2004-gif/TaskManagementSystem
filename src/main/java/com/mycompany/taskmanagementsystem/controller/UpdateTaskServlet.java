@@ -41,11 +41,11 @@ public class UpdateTaskServlet extends HttpServlet {
                 // Open the Update Page
                 request.getRequestDispatcher("UpdateTask.jsp").forward(request, response);
             } else {
-                response.sendRedirect("dashboard");
+                response.sendRedirect("tasklist");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("dashboard");
+            response.sendRedirect("tasklist");
         }
     }
 
@@ -84,7 +84,7 @@ public class UpdateTaskServlet extends HttpServlet {
             dao.updateTask(task);
 
             // Go back to Dashboard
-            response.sendRedirect("dashboard");
+            response.sendRedirect("tasklist");
 
         } catch (Exception e) {
             e.printStackTrace();
