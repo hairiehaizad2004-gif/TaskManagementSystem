@@ -165,7 +165,6 @@ td {
 
         <div class="btn-row">
             <a href="addtask.jsp" class="btn btn-green">Add Task</a>
-            <button class="btn" style="background: #eee;">Edit Task</button>
         </div>
     </aside>
 
