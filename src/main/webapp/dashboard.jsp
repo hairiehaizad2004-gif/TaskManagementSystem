@@ -209,7 +209,8 @@ td {
                             </c:forEach>
                         </td>
 
-                        <c:if test="${(status.index + startDay) % 7 == 0 && day != daysInMonth}">
+                        <%-- Check if the current cell being filled is a Saturday (Column 7) --%>
+                        <c:if test="${(day + startDay - 1) % 7 == 0 && day != daysInMonth}">
                             </tr><tr>
                         </c:if>
                     </c:forEach>
