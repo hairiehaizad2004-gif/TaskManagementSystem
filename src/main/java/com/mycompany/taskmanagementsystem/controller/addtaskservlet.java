@@ -42,7 +42,7 @@ public class addtaskservlet extends HttpServlet {
         String dateStr = request.getParameter("taskDate"); // renamed to match your variable below
 
         // 3. SQL String (Only 6 columns, TASK_ID is omitted because it's Auto-Increment)
-        String sql = "INSERT INTO APP.TASKS (TITLE, DESCRIPTION, CATEGORY, PRIORITY, DUE_DATE, CLIENT_ID) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO APP.TASKS (TITLE, DESCRIPTION, CATEGORY, PRIORITY, DUE_DATE, CLIENT_ID,STATUS) VALUES (?, ?, ?, ?, ?, ?,?)";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -61,6 +61,8 @@ public class addtaskservlet extends HttpServlet {
             }
             
             ps.setInt(6, clientId);
+            
+            ps.setString(7, "Pending");
             
             int result = ps.executeUpdate();
             if (result > 0) {
