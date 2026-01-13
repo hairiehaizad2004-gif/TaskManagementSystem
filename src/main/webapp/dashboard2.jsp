@@ -44,6 +44,29 @@
             background-color: #a29bfe; /* Lighter purple on hover */
             color: white;
         }
+        
+        /* Custom Green Export Button Styles */
+        .btn-export-green {
+            background-color: white;
+            color: #198754; /* Success Green */
+            border: 2px solid #198754;
+            padding: 8px 26px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* Hover State: Fills with green and lifts slightly */
+        .btn-export-green:hover {
+            background-color: #198754;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(25, 135, 84, 0.3);
+            border-color: #157347;
+        }
     </style>
 </head>
 <body>
@@ -53,10 +76,15 @@
 
 <div class="container">
     <h2>Task Overview</h2>
+       <div class="d-flex justify-content-end mb-3">
+            <a href="exportTasks" class="btn-export-green shadow-sm">
+                Export
+            </a>
+        </div>
 
     <div class="card mb-4">
         <div class="card-header bg-warning text-dark">⏳ Pending Tasks</div>
-        <table class="table">
+        <table class="table">   
             <thead>
                 <tr><th>Title</th><th>Priority</th><th>Due Date</th><th>Action</th></tr>
             </thead>
